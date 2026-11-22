@@ -120,23 +120,32 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
               className="bg-white rounded-3xl p-3.5 app-card-shadow hover:shadow-md transition cursor-pointer active:scale-[0.98] border border-zinc-100 flex flex-col justify-between"
             >
               <div>
-                {/* Car Photo */}
-                <div className="h-24 flex items-center justify-center p-1 mb-2">
+                {/* Car Photo Container with Studio Shadow & Multiply Blend */}
+                <div className="h-24 bg-gradient-to-b from-zinc-50/60 to-white rounded-2xl flex flex-col items-center justify-center p-2 mb-2 relative overflow-hidden">
                   <img
                     src={car.photoUrl}
                     alt={car.name}
-                    className="max-h-20 w-auto object-contain drop-shadow"
+                    className="max-h-18 w-auto object-contain mix-blend-multiply drop-shadow-sm relative z-10 transition duration-300 group-hover:scale-105"
                     loading="lazy"
                   />
+                  {/* Studio floor shadow so white background blends seamlessly */}
+                  <div className="w-3/4 h-2 bg-black/15 rounded-full blur-[3px] -mt-1 pointer-events-none"></div>
                 </div>
 
                 {/* Car Title */}
                 <h2 className="text-xs font-bold text-zinc-900 line-clamp-1">{car.name}</h2>
 
-                {/* Seat badge */}
-                <div className="flex items-center gap-1 text-[10px] text-zinc-400 mt-0.5">
-                  <User className="w-3 h-3 text-zinc-400" />
-                  <span>{car.specs.capacity} Seat</span>
+                {/* Seat badge & plate */}
+                <div className="flex items-center justify-between text-[10px] text-zinc-400 mt-0.5">
+                  <div className="flex items-center gap-1">
+                    <User className="w-3 h-3 text-zinc-400" />
+                    <span>{car.specs.capacity} Seat</span>
+                  </div>
+                  {car.specs.plateNumber && (
+                    <span className="text-[9px] font-semibold text-zinc-500 bg-zinc-100 px-1.5 py-0.2 rounded">
+                      {car.specs.plateNumber}
+                    </span>
+                  )}
                 </div>
               </div>
 

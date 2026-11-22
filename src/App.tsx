@@ -7,7 +7,7 @@ import { RentDetailsView } from './components/views/RentDetailsView';
 import { BookingSheet } from './components/views/BookingSheet';
 import { SyaratView } from './components/views/SyaratView';
 import { ContactView } from './components/views/ContactView';
-import { IntroModal } from './components/views/IntroModal';
+import { IntroScreen } from './components/views/IntroScreen';
 import { BookingSuccessModal } from './components/BookingSuccessModal';
 
 import type { MobileCarItem } from './data/cars';
@@ -158,9 +158,9 @@ export function App() {
           />
         )}
 
-        {/* Intro / Name Input Modal */}
+        {/* Fullscreen Mobile Onboarding Screen */}
         {isIntroOpen && (
-          <IntroModal
+          <IntroScreen
             currentName={userName !== 'Sewa Mobil DCS' ? userName : ''}
             onSaveName={handleSaveName}
             onSkip={handleSkipIntro}

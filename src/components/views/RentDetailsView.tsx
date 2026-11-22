@@ -45,19 +45,21 @@ export const RentDetailsView: React.FC<RentDetailsViewProps> = ({
         <h1 className="text-sm font-bold text-zinc-900 tracking-tight">Rent Details</h1>
       </div>
 
-      {/* Hero Car Showcase */}
-      <div className="relative py-4 flex flex-col items-center justify-center">
-        <div className="w-full h-52 flex items-center justify-center">
+      {/* Hero Car Showcase with Studio Radial Background */}
+      <div className="relative py-3 flex flex-col items-center justify-center">
+        <div className="w-full h-52 bg-gradient-to-b from-white via-white/80 to-transparent rounded-3xl p-4 flex flex-col items-center justify-center relative overflow-hidden">
           <img
             src={car.photoUrl}
             alt={car.name}
-            className="max-h-48 w-auto object-contain drop-shadow-2xl"
+            className="max-h-44 w-auto object-contain mix-blend-multiply drop-shadow-xl relative z-10"
           />
+          {/* Subtle Grounding Floor Shadow so white background seamlessly blends */}
+          <div className="w-4/5 h-3 bg-black/15 rounded-full blur-[4px] -mt-1 pointer-events-none"></div>
         </div>
 
         {/* 360 degree rotation indicator */}
-        <div className="mt-2 flex items-center justify-center">
-          <div className="w-8 h-8 rounded-full bg-white border border-zinc-200 shadow-sm flex items-center justify-center text-blue-600">
+        <div className="mt-1 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-white border border-zinc-200/90 shadow-sm flex items-center justify-center text-blue-600">
             <RotateCw className="w-4 h-4" />
           </div>
         </div>

@@ -7,7 +7,10 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  body {
+  html, body {
+    min-height: 100%;
+    min-height: 100dvh;
+    touch-action: manipulation;
     background-color: #f1f3f7;
     color: #0f172a;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
