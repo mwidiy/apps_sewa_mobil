@@ -6,10 +6,9 @@ import {
   Route, 
   ShieldCheck, 
   Car,
-  Edit3,
-  Check
+  ChevronDown
 } from 'lucide-react';
-import { POPULAR_ROUTES, POPULAR_ORIGINS, POPULAR_DESTINATIONS } from '../../data/routes';
+import { POPULAR_ORIGINS, POPULAR_DESTINATIONS } from '../../data/routes';
 import { COMPANY } from '../../data/company';
 import type { RentalServiceType } from '../../data/company';
 import { WhatsAppIcon } from '../icons/WhatsAppIcon';
@@ -29,25 +28,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
   activeService,
   onServiceChange,
 }) => {
-  // Route selection states
+  // Clean route selection states (no custom typing)
   const [origin, setOrigin] = useState<string>(POPULAR_ORIGINS[0]);
   const [destination, setDestination] = useState<string>(POPULAR_DESTINATIONS[0]);
-  
-  // Custom manual inputs
-  const [isCustomOrigin, setIsCustomOrigin] = useState(false);
-  const [customOriginText, setCustomOriginText] = useState('');
-  
-  const [isCustomDest, setIsCustomDest] = useState(false);
-  const [customDestText, setCustomDestText] = useState('');
-
   const [durationDays, setDurationDays] = useState(1);
 
-  // Computed effective locations
-  const currentOrigin = isCustomOrigin && customOriginText.trim() ? customOriginText.trim() : origin;
-  const currentDestination = isCustomDest && customDestText.trim() ? customDestText.trim() : destination;
-
   // Approximate distance calculation
-  const destLower = currentDestination.toLowerCase();
+  const destLower = destination.toLowerCase();
   const estimatedKm = destLower.includes('bandung') ? 155
     : destLower.includes('puncak') ? 85
     : destLower.includes('anyer') ? 135
@@ -55,7 +42,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
     : destLower.includes('soekarno') || destLower.includes('soetta') ? 42
     : destLower.includes('halim') ? 30
     : destLower.includes('bogor') ? 60
-    : 40;
+    : 45;
 
   const estimatedHours = destLower.includes('bandung') ? '2.5 - 3.5 Jam'
     : destLower.includes('puncak') ? '1.5 - 2.5 Jam'
@@ -67,9 +54,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const isLuarKota = estimatedKm > 60;
 
   // Pricing: Original (dicoret) vs Promo Diskon
-  const originalDailyPrice = activeService === 'lepas_kunci' ? 380000
-    : activeService === 'dengan_sopir' ? 580000
-    : 850000;
+  const originalDailyPrice = activeService === 'lepas_kunci' ? 350000
+    : activeService === 'dengan_sopir' ? 520000
+    : 780000;
 
   const promoDailyPrice = activeService === 'lepas_kunci' ? 280000
     : activeService === 'dengan_sopir' ? 420000
@@ -87,8 +74,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
     const text = `Halo Admin DCS Rent Car,
 Saya *${userName || 'Pelanggan'}* ingin konsultasi sewa mobil untuk rute berikut:
 
-📍 *Titik Jemput (Dari)*: ${currentOrigin}
-🏁 *Tujuan (Mau Ke)*: ${currentDestination}
+📍 *Titik Jemput (Dari)*: ${origin}
+🏁 *Tujuan (Mau Ke)*: ${destination}
 ⏳ *Durasi*: ${durationDays} Hari
 📋 *Layanan*: ${serviceName}
 🛣️ *Estimasi Jarak*: ~${estimatedKm} KM (${estimatedHours})
@@ -101,8 +88,8 @@ Mohon info ketersediaan unit dan kelanjutan verifikasinya ya admin. Terima kasih
 
   const handleSelectArmadaForRoute = () => {
     onSeeAllArmada({
-      origin: currentOrigin,
-      destination: currentDestination,
+      origin: origin,
+      destination: destination,
       service: activeService,
     });
   };
@@ -147,105 +134,64 @@ Mohon info ketersediaan unit dan kelanjutan verifikasinya ya admin. Terima kasih
 
       {/* CORE FEATURE: Trip & Route Cost Calculator */}
       <div className="bg-white rounded-3xl p-5 app-card-shadow border border-zinc-100 space-y-4">
-        {/* Header Title (Tanpa tulisan realtime) */}
+        {/* Header Title */}
         <div className="flex items-center gap-2.5 border-b border-zinc-100 pb-3">
           <div className="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
             <Route className="w-5 h-5 stroke-[2.2]" />
           </div>
           <div>
             <h2 className="text-sm font-extrabold text-zinc-900">Kalkulator Rute & Biaya Sewa</h2>
-            <p className="text-[11px] text-zinc-400">Pilih atau ketik rute perjalanan Anda secara fleksibel</p>
+            <p className="text-[11px] text-zinc-400">Pilih rute perjalanan Anda untuk hitung estimasi biaya</p>
           </div>
         </div>
 
-        {/* Visual Map Route Stepper Card with Custom Option */}
-        <div className="relative bg-zinc-50 rounded-2xl p-4 border border-zinc-200/70 space-y-4">
-          
+        {/* Route Selector (Clean Dropdowns) */}
+        <div className="relative bg-zinc-50 rounded-2xl p-4 border border-zinc-200/70 space-y-3.5">
           {/* Origin: Dari Mana */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block"></span>
-                <span>Dari Mana (Titik Penjemputan):</span>
-              </label>
-
-              <button
-                type="button"
-                onClick={() => setIsCustomOrigin(!isCustomOrigin)}
-                className="text-[10px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 underline"
-              >
-                <Edit3 className="w-2.5 h-2.5" />
-                <span>{isCustomOrigin ? 'Pilih dari List' : 'Ketik Alamat Sendiri'}</span>
-              </button>
-            </div>
-
-            {isCustomOrigin ? (
-              <input
-                type="text"
-                placeholder="Ketik alamat jemput (cth: Jl. Margonda No. 10 / Lobi Hotel...)"
-                value={customOriginText}
-                onChange={(e) => setCustomOriginText(e.target.value)}
-                autoFocus
-                className="w-full bg-white border border-blue-400 rounded-xl px-3 py-2 text-xs font-semibold text-zinc-800 placeholder-zinc-400 focus:outline-none shadow-sm"
-              />
-            ) : (
+          <div className="space-y-1">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block"></span>
+              <span>Dari Mana (Titik Penjemputan):</span>
+            </label>
+            <div className="relative">
               <select
                 value={origin}
                 onChange={(e) => setOrigin(e.target.value)}
-                className="w-full bg-white border border-zinc-200 rounded-xl px-3 py-2 text-xs font-semibold text-zinc-800 focus:outline-none focus:border-blue-600 transition"
+                className="w-full bg-white border border-zinc-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-zinc-800 focus:outline-none focus:border-blue-600 transition appearance-none pr-8 shadow-sm"
               >
                 {POPULAR_ORIGINS.map((orig, i) => (
                   <option key={i} value={orig}>{orig}</option>
                 ))}
               </select>
-            )}
+              <ChevronDown className="w-4 h-4 text-zinc-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
           </div>
 
           {/* Dotted divider */}
-          <div className="border-t border-dashed border-zinc-200 relative my-1">
+          <div className="border-t border-dashed border-zinc-200 relative my-0.5">
             <div className="absolute left-1.5 -top-1.5 w-3 h-3 bg-zinc-100 rounded-full flex items-center justify-center">
               <span className="w-1 h-1 bg-zinc-400 rounded-full"></span>
             </div>
           </div>
 
           {/* Destination: Mau Ke Mana */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
-                <span>Mau Ke Mana (Tujuan Perjalanan):</span>
-              </label>
-
-              <button
-                type="button"
-                onClick={() => setIsCustomDest(!isCustomDest)}
-                className="text-[10px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 underline"
-              >
-                <Edit3 className="w-2.5 h-2.5" />
-                <span>{isCustomDest ? 'Pilih dari List' : 'Ketik Tujuan Sendiri'}</span>
-              </button>
-            </div>
-
-            {isCustomDest ? (
-              <input
-                type="text"
-                placeholder="Ketik tujuan (cth: Lembang Bandung / Pantai Carita / BSD...)"
-                value={customDestText}
-                onChange={(e) => setCustomDestText(e.target.value)}
-                autoFocus
-                className="w-full bg-white border border-rose-400 rounded-xl px-3 py-2 text-xs font-semibold text-zinc-800 placeholder-zinc-400 focus:outline-none shadow-sm"
-              />
-            ) : (
+          <div className="space-y-1">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
+              <span>Mau Ke Mana (Tujuan Perjalanan):</span>
+            </label>
+            <div className="relative">
               <select
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
-                className="w-full bg-white border border-zinc-200 rounded-xl px-3 py-2 text-xs font-semibold text-zinc-800 focus:outline-none focus:border-blue-600 transition"
+                className="w-full bg-white border border-zinc-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-zinc-800 focus:outline-none focus:border-blue-600 transition appearance-none pr-8 shadow-sm"
               >
                 {POPULAR_DESTINATIONS.map((dest, i) => (
                   <option key={i} value={dest}>{dest}</option>
                 ))}
               </select>
-            )}
+              <ChevronDown className="w-4 h-4 text-zinc-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
           </div>
         </div>
 
@@ -341,7 +287,7 @@ Mohon info ketersediaan unit dan kelanjutan verifikasinya ya admin. Terima kasih
           </div>
         </div>
 
-        {/* Calculation Result Breakdown Card (DENGAN HARGA CORET & DISKON) */}
+        {/* Calculation Result Breakdown Card (HARGA CORET & DISKON) */}
         <div className="p-4 rounded-2xl bg-gradient-to-br from-zinc-50 to-blue-50/50 border border-blue-100 space-y-2">
           <div className="flex items-center justify-between text-xs text-zinc-600">
             <span>Rute & Durasi:</span>
@@ -368,7 +314,7 @@ Mohon info ketersediaan unit dan kelanjutan verifikasinya ya admin. Terima kasih
               <span className="line-through text-xs text-zinc-400 font-semibold block">
                 Rp {totalOriginal.toLocaleString('id-ID')}
               </span>
-              {/* HARGA DISKON PROMO */}
+              {/* HARGA PROMO */}
               <span className="text-lg font-black text-blue-600">
                 Rp {totalPromo.toLocaleString('id-ID')}
               </span>
