@@ -43,6 +43,7 @@ export const COMPANY: CompanyInfo = {
 export type RentalServiceType = "lepas_kunci" | "dengan_sopir" | "all_in";
 
 export interface BookingPayload {
+  customerName?: string;
   carName: string;
   serviceType: RentalServiceType;
   durationDays: number;
@@ -50,6 +51,7 @@ export interface BookingPayload {
   startTime: string;
   pickupLocation: string;
   customLocationDetail?: string;
+  routeInfo?: string;
   needDelivery: boolean;
   notes?: string;
   estimatedPrice: number;
@@ -65,13 +67,27 @@ export function generateWhatsAppBookingUrl(booking: BookingPayload): string {
   const lines = [
     `*FORM ORDER SEWA MOBIL - DCS RENT CAR*`,
     `----------------------------------------`,
+  ];
+
+  if (booking.customerName) {
+    lines.push(`👤 *Pemesan*: ${booking.customerName}`);
+  }
+
+  lines.push(
     `🚗 *Unit Mobil*: ${booking.carName}`,
     `📋 *Paket Layanan*: ${serviceLabelMap[booking.serviceType]}`,
     `📅 *Tanggal Mulai*: ${booking.startDate || "Menyesuaikan"}`,
     `⏰ *Jam Ambil/Jemput*: ${booking.startTime || "09:00 WIB"}`,
-    `⏳ *Durasi*: ${booking.durationDays} Hari`,
-    `📍 *Titik Lokasi*: ${booking.needDelivery ? `Antar ke ${booking.pickupLocation}` : "Ambil Sendiri di Pool Cinere"}`,
-  ];
+    `⏳ *Durasi*: ${booking.durationDays} Hari`
+  );
+
+  if (booking.routeInfo) {
+    lines.push(`🛣️ *Rute Perjalanan*: ${booking.routeInfo}`);
+  }
+
+  lines.push(
+    `📍 *Titik Lokasi*: ${booking.needDelivery ? `Antar ke ${booking.pickupLocation}` : "Ambil Sendiri di Pool Cinere"}`
+  );
 
   if (booking.customLocationDetail) {
     lines.push(`📝 *Detail Alamat*: ${booking.customLocationDetail}`);

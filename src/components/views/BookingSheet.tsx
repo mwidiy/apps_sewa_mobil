@@ -9,6 +9,8 @@ import { JABODETABEK_AREAS } from '../../data/locations';
 interface BookingSheetProps {
   car: MobileCarItem | null;
   initialService: RentalServiceType;
+  userName?: string;
+  routeInfo?: string;
   onClose: () => void;
   onCompleteBooking: (booking: BookingPayload) => void;
 }
@@ -16,6 +18,8 @@ interface BookingSheetProps {
 export const BookingSheet: React.FC<BookingSheetProps> = ({
   car,
   initialService,
+  userName,
+  routeInfo,
   onClose,
   onCompleteBooking,
 }) => {
@@ -35,6 +39,7 @@ export const BookingSheet: React.FC<BookingSheetProps> = ({
 
   const handleSubmit = () => {
     const payload: BookingPayload = {
+      customerName: userName,
       carName: car.name,
       serviceType: service,
       durationDays: days,
@@ -42,6 +47,7 @@ export const BookingSheet: React.FC<BookingSheetProps> = ({
       startTime: '09:00 WIB',
       pickupLocation: deliveryMethod === 'delivery' ? selectedArea.name : 'Pool Cinere Depok',
       customLocationDetail: addressDetail,
+      routeInfo: routeInfo,
       needDelivery: deliveryMethod === 'delivery',
       estimatedPrice: totalPrice,
     };

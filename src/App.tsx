@@ -7,6 +7,7 @@ import { RentDetailsView } from './components/views/RentDetailsView';
 import { BookingSheet } from './components/views/BookingSheet';
 import { SyaratView } from './components/views/SyaratView';
 import { ContactView } from './components/views/ContactView';
+import { IntroModal } from './components/views/IntroModal';
 import { BookingSuccessModal } from './components/BookingSuccessModal';
 
 import type { MobileCarItem } from './data/cars';
@@ -17,6 +18,21 @@ export function App() {
   const [selectedCar, setSelectedCar] = useState<MobileCarItem | null>(null);
   const [activeService, setActiveService] = useState<RentalServiceType>('lepas_kunci');
   
+  // User name & Intro Onboarding state
+  const [userName, setUserName] = useState<string>(() => {
+    return localStorage.getItem('dcs_user_name') || '';
+  });
+  const [isIntroOpen, setIsIntroOpen] = useState<boolean>(() => {
+    return !localStorage.getItem('dcs_user_name');
+  });
+
+  // Selected route state (from HomeView Route Calculator)
+  const [selectedRoute, setSelectedRoute] = useState<{
+    origin: string;
+    destination: string;
+    service: RentalServiceType;
+  } | null>(null);
+
   // Booking sheet state
   const [bookingSheetOpen, setBookingSheetOpen] = useState(false);
   const [bookingSheetCar, setBookingSheetCar] = useState<MobileCarItem | null>(null);
@@ -26,6 +42,18 @@ export function App() {
   const [successBooking, setSuccessBooking] = useState<BookingPayload | null>(null);
 
   // Handlers
+  const handleSaveName = (name: string) => {
+    setUserName(name);
+    localStorage.setItem('dcs_user_name', name);
+    setIsIntroOpen(false);
+  };
+
+  const handleSkipIntro = () => {
+    setUserName('Sewa Mobil DCS');
+    localStorage.setItem('dcs_user_name', 'Sewa Mobil DCS');
+    setIsIntroOpen(false);
+  };
+
   const handleSelectCar = (car: MobileCarItem) => {
     setSelectedCar(car);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -44,6 +72,19 @@ export function App() {
   const handleCompleteBooking = (booking: BookingPayload) => {
     setBookingSheetOpen(false);
     setSuccessBooking(booking);
+  };
+
+  const handleSeeAllArmadaFromRoute = (routeInfo?: {
+    origin: string;
+    destination: string;
+    service: RentalServiceType;
+  }) => {
+    if (routeInfo) {
+      setSelectedRoute(routeInfo);
+      setActiveService(routeInfo.service);
+    }
+    setActiveTab('collection');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -65,8 +106,9 @@ export function App() {
             <>
               {activeTab === 'home' && (
                 <HomeView
-                  onSelectCar={handleSelectCar}
-                  onSeeAll={() => setActiveTab('collection')}
+                  userName={userName}
+                  onOpenNameEdit={() => setIsIntroOpen(true)}
+                  onSeeAllArmada={handleSeeAllArmadaFromRoute}
                   activeService={activeService}
                   onServiceChange={setActiveService}
                 />
@@ -78,6 +120,7 @@ export function App() {
                   onSelectCar={handleSelectCar}
                   activeService={activeService}
                   onServiceChange={setActiveService}
+                  selectedRouteInfo={selectedRoute}
                 />
               )}
 
@@ -108,8 +151,19 @@ export function App() {
           <BookingSheet
             car={bookingSheetCar}
             initialService={bookingSheetService}
+            userName={userName}
+            routeInfo={selectedRoute ? `Dari ${selectedRoute.origin} ke ${selectedRoute.destination}` : undefined}
             onClose={() => setBookingSheetOpen(false)}
             onCompleteBooking={handleCompleteBooking}
+          />
+        )}
+
+        {/* Intro / Name Input Modal */}
+        {isIntroOpen && (
+          <IntroModal
+            currentName={userName !== 'Sewa Mobil DCS' ? userName : ''}
+            onSaveName={handleSaveName}
+            onSkip={handleSkipIntro}
           />
         )}
 

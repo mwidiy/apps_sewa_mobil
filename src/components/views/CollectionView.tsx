@@ -9,6 +9,7 @@ interface CollectionViewProps {
   onSelectCar: (car: MobileCarItem) => void;
   activeService: RentalServiceType;
   onServiceChange: (service: RentalServiceType) => void;
+  selectedRouteInfo?: { origin: string; destination: string; service: RentalServiceType } | null;
 }
 
 export const CollectionView: React.FC<CollectionViewProps> = ({
@@ -16,6 +17,7 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
   onSelectCar,
   activeService,
   onServiceChange,
+  selectedRouteInfo,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<'All' | 'MPV' | 'City Car'>('All');
 
@@ -35,6 +37,25 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
         </button>
         <h1 className="text-sm font-bold text-zinc-900 tracking-tight">Our Collection</h1>
       </div>
+
+      {/* Selected Route Context Banner if applicable */}
+      {selectedRouteInfo && (
+        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3 text-xs space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="font-extrabold text-blue-700 text-[10px] uppercase tracking-wider">
+              Rute Pilihan Anda:
+            </span>
+            <span className="text-[10px] text-blue-600 font-semibold bg-white px-2 py-0.5 rounded-full border border-blue-200">
+              {selectedRouteInfo.service === 'lepas_kunci' ? 'Lepas Kunci' : selectedRouteInfo.service === 'dengan_sopir' ? 'Dengan Sopir' : 'All-In'}
+            </span>
+          </div>
+          <div className="text-zinc-800 font-bold flex items-center gap-1.5 truncate">
+            <span className="truncate">{selectedRouteInfo.origin}</span>
+            <span className="text-blue-500">➔</span>
+            <span className="truncate">{selectedRouteInfo.destination}</span>
+          </div>
+        </div>
+      )}
 
       {/* Service Filter Tabs (Lepas Kunci, Sopir, All-In) */}
       <div className="flex items-center gap-1.5 p-1 bg-zinc-200/60 rounded-full text-xs font-semibold">
