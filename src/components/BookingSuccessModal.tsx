@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { CheckCircle2, MessageSquare, Copy, Check, X, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, Copy, Check, X, ShieldCheck } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { COMPANY } from '../data/company';
 import type { BookingPayload } from '../data/company';
+import { WhatsAppIcon } from './icons/WhatsAppIcon';
 
 interface BookingSuccessModalProps {
   booking: BookingPayload | null;
@@ -114,9 +115,9 @@ Halo Admin DCS, saya mau order rental via Aplikasi Mobile. Apakah unit dan jadwa
         <div className="space-y-2">
           <button
             onClick={handleOpenWhatsApp}
-            className="w-full py-3.5 px-4 rounded-2xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/25 transition"
+            className="w-full py-3.5 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition"
           >
-            <MessageSquare className="w-4 h-4 fill-white" />
+            <WhatsAppIcon className="w-4 h-4 text-white" />
             <span>Kirim Pesan ke WhatsApp CS</span>
           </button>
 

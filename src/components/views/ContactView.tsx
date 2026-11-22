@@ -3,13 +3,13 @@ import {
   ArrowLeft, 
   MapPin, 
   PhoneCall, 
-  MessageSquare, 
   Navigation, 
   Clock, 
   ShieldCheck, 
   AlertCircle 
 } from 'lucide-react';
 import { COMPANY, getEmergencyWhatsAppUrl, getGeneralWhatsAppUrl } from '../../data/company';
+import { WhatsAppIcon } from '../icons/WhatsAppIcon';
 
 interface ContactViewProps {
   onBack: () => void;
@@ -72,7 +72,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
           className="bg-white p-4 rounded-3xl border border-zinc-100 app-card-shadow flex flex-col justify-between active:scale-95 transition"
         >
           <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
-            <MessageSquare className="w-5 h-5 fill-emerald-600" />
+            <WhatsAppIcon className="w-5 h-5 text-emerald-600" />
           </div>
           <div>
             <h3 className="text-xs font-bold text-zinc-900">Chat WhatsApp</h3>

@@ -172,15 +172,18 @@ export const RentDetailsView: React.FC<RentDetailsViewProps> = ({
         </div>
       </div>
 
-      {/* Fixed Bottom Action Bar (Screen 3 Bottom Bar) */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-zinc-200/80 px-6 py-4 shadow-lg flex items-center justify-between max-w-md mx-auto">
+      {/* Fixed Bottom Action Bar (Screen 3 Bottom Bar with Strikethrough Price) */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-zinc-200/80 px-6 py-3.5 shadow-lg flex items-center justify-between max-w-md mx-auto">
         <div>
-          <span className="text-[11px] text-zinc-400 font-medium block">Rent Price</span>
-          <div className="flex items-baseline gap-1">
-            <span className="text-lg font-black text-zinc-900">
+          <span className="text-[10px] text-zinc-400 font-medium block">Harga Sewa / Rent Price</span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="line-through text-xs text-zinc-400 font-bold">
+              Rp {(pricing.originalPrice / 1000).toLocaleString('id-ID')}k
+            </span>
+            <span className="text-lg font-black text-blue-600">
               Rp {(pricing.promoPrice / 1000).toLocaleString('id-ID')}k
             </span>
-            <span className="text-xs text-zinc-400 font-medium">/day</span>
+            <span className="text-[10px] text-zinc-400 font-medium">/hari</span>
           </div>
         </div>
 

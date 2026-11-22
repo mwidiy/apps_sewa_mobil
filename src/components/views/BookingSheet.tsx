@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { X, Plus, Minus, MapPin, MessageSquare, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { X, Plus, Minus, MapPin, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { getCarPrice } from '../../data/cars';
 import type { MobileCarItem } from '../../data/cars';
 import { COMPANY } from '../../data/company';
 import type { BookingPayload, RentalServiceType } from '../../data/company';
 import { JABODETABEK_AREAS } from '../../data/locations';
+import { WhatsAppIcon } from '../icons/WhatsAppIcon';
 
 interface BookingSheetProps {
   car: MobileCarItem | null;
@@ -35,6 +36,7 @@ export const BookingSheet: React.FC<BookingSheetProps> = ({
   const pricing = getCarPrice(car, service);
   const selectedArea = JABODETABEK_AREAS.find((a) => a.id === areaId) || JABODETABEK_AREAS[0];
   const deliveryFee = deliveryMethod === 'delivery' ? selectedArea.deliveryFee : 0;
+  const totalOriginal = (pricing.originalPrice * days) + deliveryFee;
   const totalPrice = (pricing.promoPrice * days) + deliveryFee;
 
   const handleSubmit = () => {
@@ -183,17 +185,25 @@ export const BookingSheet: React.FC<BookingSheetProps> = ({
         {/* Total Price Summary & WhatsApp Launch */}
         <div className="p-4 bg-zinc-50 rounded-2xl border border-zinc-200/80 space-y-3">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-zinc-500">Estimasi Total ({days} Hari):</span>
-            <span className="text-base font-black text-blue-600">
-              Rp {totalPrice.toLocaleString('id-ID')}
-            </span>
+            <div>
+              <span className="text-zinc-500 block">Estimasi Total ({days} Hari):</span>
+              <span className="text-[10px] text-emerald-600 font-bold">Harga Diskon Promo</span>
+            </div>
+            <div className="text-right">
+              <span className="line-through text-xs text-zinc-400 font-semibold block">
+                Rp {totalOriginal.toLocaleString('id-ID')}
+              </span>
+              <span className="text-base font-black text-blue-600">
+                Rp {totalPrice.toLocaleString('id-ID')}
+              </span>
+            </div>
           </div>
 
           <button
             onClick={handleSubmit}
             className="w-full py-3.5 px-4 rounded-2xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/25 transition"
           >
-            <MessageSquare className="w-4 h-4 fill-white" />
+            <WhatsAppIcon className="w-4 h-4 text-white" />
             <span>Kirim Pesan Booking ke WhatsApp CS</span>
           </button>
         </div>

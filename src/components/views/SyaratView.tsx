@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { FileText, CheckSquare, Square, MessageSquare, ArrowLeft } from 'lucide-react';
+import { FileText, CheckSquare, Square, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { REQUIREMENT_DOCS, RENTAL_RULES } from '../../data/requirements';
 import { COMPANY } from '../../data/company';
+import { WhatsAppIcon } from '../icons/WhatsAppIcon';
 
 interface SyaratViewProps {
   onBack: () => void;
@@ -129,9 +130,9 @@ export const SyaratView: React.FC<SyaratViewProps> = ({ onBack }) => {
       {/* Share Button */}
       <button
         onClick={handleShareToWA}
-        className="w-full py-3 px-4 rounded-2xl bg-zinc-900 hover:bg-black active:scale-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition"
+        className="w-full py-3.5 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-600/20 transition"
       >
-        <MessageSquare className="w-4 h-4" />
+        <WhatsAppIcon className="w-4 h-4 text-white" />
         <span>Kirim Kelayakan Berkas ke WhatsApp CS</span>
       </button>
     </div>

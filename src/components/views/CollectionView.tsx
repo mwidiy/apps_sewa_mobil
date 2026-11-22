@@ -140,10 +140,15 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
                 </div>
               </div>
 
-              {/* Price and Circle Arrow */}
-              <div className="flex items-center justify-between pt-3 mt-1 border-t border-zinc-50">
-                <div className="text-xs font-extrabold text-zinc-900">
-                  Rp {(pricing.promoPrice / 1000).toLocaleString('id-ID')}k<span className="text-[10px] text-zinc-400 font-normal">/D</span>
+              {/* Price with Strikethrough and Circle Arrow */}
+              <div className="flex items-center justify-between pt-2.5 mt-1 border-t border-zinc-100">
+                <div>
+                  <span className="line-through text-[9px] text-zinc-400 font-semibold block leading-tight">
+                    Rp {(pricing.originalPrice / 1000).toLocaleString('id-ID')}k
+                  </span>
+                  <div className="text-xs font-black text-blue-600">
+                    Rp {(pricing.promoPrice / 1000).toLocaleString('id-ID')}k<span className="text-[9px] text-zinc-400 font-normal">/D</span>
+                  </div>
                 </div>
 
                 <div className="w-7 h-7 rounded-full border border-blue-600/30 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition shrink-0">

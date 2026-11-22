@@ -5,54 +5,24 @@ export interface RequirementDoc {
   isRequiredLepasKunci: boolean;
   isRequiredSopir: boolean;
   isRequiredAllIn: boolean;
-  category: "identitas" | "pendukung" | "jaminan";
 }
 
 export const REQUIREMENT_DOCS: RequirementDoc[] = [
   {
     id: "ktp",
     name: "e-KTP Asli Pemesan",
-    desc: "Wajib masih aktif & nama sesuai pemesan",
+    desc: "Wajib masih berlaku untuk verifikasi identitas penyewa",
     isRequiredLepasKunci: true,
     isRequiredSopir: true,
     isRequiredAllIn: true,
-    category: "identitas",
   },
   {
     id: "sim_a",
     name: "SIM A Aktif",
-    desc: "Wajib untuk pengemudi lepas kunci",
+    desc: "Wajib untuk pengemudi rental lepas kunci (self-drive)",
     isRequiredLepasKunci: true,
     isRequiredSopir: false,
     isRequiredAllIn: false,
-    category: "identitas",
-  },
-  {
-    id: "id_kerja",
-    name: "ID Card Karyawan / Kartu Nama / Slip Gaji",
-    desc: "Sebagai bukti domisili & profesi",
-    isRequiredLepasKunci: true,
-    isRequiredSopir: false,
-    isRequiredAllIn: false,
-    category: "pendukung",
-  },
-  {
-    id: "medsos",
-    name: "Akun Media Sosial Aktif (IG / LinkedIn)",
-    desc: "Akun aktif non-privat untuk verifikasi cepat",
-    isRequiredLepasKunci: true,
-    isRequiredSopir: false,
-    isRequiredAllIn: false,
-    category: "pendukung",
-  },
-  {
-    id: "motor_deposit",
-    name: "Motor + STNK atau Deposit Jaminan",
-    desc: "Ditinggal saat serah terima unit / ditransfer",
-    isRequiredLepasKunci: true,
-    isRequiredSopir: false,
-    isRequiredAllIn: false,
-    category: "jaminan",
   },
 ];
 
@@ -60,24 +30,23 @@ export const RENTAL_RULES = [
   {
     title: "Ketentuan Waktu Sewa",
     items: [
-      "Perhitungan 1 hari sewa adalah 24 jam terhitung dari jam serah terima unit (untuk lepas kunci).",
-      "Untuk sewa dengan sopir & all-in, hitungan standar adalah 12 jam atau maksimal hingga pukul 23:00 WIB di hari yang sama.",
-      "Overtime sewa dikenakan 10% dari tarif harian per jam.",
+      "Perhitungan 1 hari sewa lepas kunci adalah 24 jam sejak serah terima unit.",
+      "Untuk sewa dengan sopir & all-in, hitungan standar adalah 12 jam atau maksimal pukul 23:00 WIB.",
+      "Overtime sewa dikenakan biaya wajar 10% per jam.",
     ],
   },
   {
     title: "Zonasi Pemakaian",
     items: [
-      "Tarif dasar mencakup area operasional JABODETABEK.",
-      "Untuk tujuan luar kota (Bandung, Jawa Barat, Jawa Tengah), silakan konfirmasi saat booking untuk penyesuaian tarif.",
+      "Tarif dasar mencakup seluruh wilayah JABODETABEK.",
+      "Tujuan luar kota (Puncak, Bandung, Anyer, Cirebon, dll) dapat dikonfirmasi saat pemesanan.",
     ],
   },
   {
-    title: "Larangan & Kebersihan",
+    title: "Kebersihan & Kenyamanan",
     items: [
-      "Dilarang keras merokok atau vape di dalam kabin mobil.",
-      "Dilarang membawa barang berbau menyengat (durian, seafood basah tanpa wadah kedap).",
-      "Mobil diserahkan dalam keadaan bersih dan wajib dikembalikan dalam kondisi wajar.",
+      "Dilarang keras merokok atau vape di dalam kabin kendaraan.",
+      "Unit mobil diserahkan dalam keadaan bersih, wangi, dan siap pakai.",
     ],
   },
 ];

@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
 import { 
-  MapPin, 
   Navigation, 
   ArrowRight, 
   Clock, 
   Route, 
-  Fuel, 
   ShieldCheck, 
-  MessageSquare, 
-  SlidersHorizontal,
-  ChevronRight,
-  Flame,
-  Car
+  Car,
+  Edit3,
+  Check
 } from 'lucide-react';
 import { POPULAR_ROUTES, POPULAR_ORIGINS, POPULAR_DESTINATIONS } from '../../data/routes';
-import type { RoutePreset } from '../../data/routes';
 import { COMPANY } from '../../data/company';
 import type { RentalServiceType } from '../../data/company';
+import { WhatsAppIcon } from '../icons/WhatsAppIcon';
 
 interface HomeViewProps {
   userName: string;
@@ -36,46 +32,52 @@ export const HomeView: React.FC<HomeViewProps> = ({
   // Route selection states
   const [origin, setOrigin] = useState<string>(POPULAR_ORIGINS[0]);
   const [destination, setDestination] = useState<string>(POPULAR_DESTINATIONS[0]);
-  const [customOrigin, setCustomOrigin] = useState('');
-  const [customDestination, setCustomDestination] = useState('');
+  
+  // Custom manual inputs
+  const [isCustomOrigin, setIsCustomOrigin] = useState(false);
+  const [customOriginText, setCustomOriginText] = useState('');
+  
+  const [isCustomDest, setIsCustomDest] = useState(false);
+  const [customDestText, setCustomDestText] = useState('');
+
   const [durationDays, setDurationDays] = useState(1);
 
-  // Match preset or calculate dynamic estimate
-  const currentOrigin = customOrigin.trim() || origin;
-  const currentDestination = customDestination.trim() || destination;
+  // Computed effective locations
+  const currentOrigin = isCustomOrigin && customOriginText.trim() ? customOriginText.trim() : origin;
+  const currentDestination = isCustomDest && customDestText.trim() ? customDestText.trim() : destination;
 
-  // Find if current selection matches a known preset
-  const matchedPreset = POPULAR_ROUTES.find(
-    (r) => destination.toLowerCase().includes(r.id.split('-')[0])
-  ) || POPULAR_ROUTES[0];
+  // Approximate distance calculation
+  const destLower = currentDestination.toLowerCase();
+  const estimatedKm = destLower.includes('bandung') ? 155
+    : destLower.includes('puncak') ? 85
+    : destLower.includes('anyer') ? 135
+    : destLower.includes('cirebon') ? 220
+    : destLower.includes('soekarno') || destLower.includes('soetta') ? 42
+    : destLower.includes('halim') ? 30
+    : destLower.includes('bogor') ? 60
+    : 40;
 
-  const estimatedKm = destination.includes('Bandung') ? 155
-    : destination.includes('Puncak') ? 85
-    : destination.includes('Anyer') ? 135
-    : destination.includes('Cirebon') ? 220
-    : destination.includes('Bandara') ? 42
-    : 45;
-
-  const estimatedHours = destination.includes('Bandung') ? '2.5 - 3.5 Jam'
-    : destination.includes('Puncak') ? '1.5 - 2.5 Jam'
-    : destination.includes('Anyer') ? '2.5 - 3 Jam'
-    : destination.includes('Cirebon') ? '3.5 - 4.5 Jam'
-    : destination.includes('Bandara') ? '45 - 60 Menit'
+  const estimatedHours = destLower.includes('bandung') ? '2.5 - 3.5 Jam'
+    : destLower.includes('puncak') ? '1.5 - 2.5 Jam'
+    : destLower.includes('anyer') ? '2.5 - 3 Jam'
+    : destLower.includes('cirebon') ? '3.5 - 4.5 Jam'
+    : destLower.includes('soetta') || destLower.includes('soekarno') ? '45 - 60 Menit'
     : '1 - 2 Jam';
 
   const isLuarKota = estimatedKm > 60;
 
-  // Base rental estimate (starting price of popular family car Avanza/Calya)
-  const baseDailyPrice = activeService === 'lepas_kunci' ? 300000
-    : activeService === 'dengan_sopir' ? 450000
-    : 700000;
+  // Pricing: Original (dicoret) vs Promo Diskon
+  const originalDailyPrice = activeService === 'lepas_kunci' ? 380000
+    : activeService === 'dengan_sopir' ? 580000
+    : 850000;
 
-  // Estimated toll & fuel based on route
-  const tollFuelEstimate = activeService === 'all_in'
-    ? 0 // Already included in All-In
-    : isLuarKota ? (estimatedKm * 1800) : 100000;
+  const promoDailyPrice = activeService === 'lepas_kunci' ? 280000
+    : activeService === 'dengan_sopir' ? 420000
+    : 620000;
 
-  const totalEstimate = (baseDailyPrice * durationDays) + (activeService === 'all_in' ? 0 : 0);
+  const totalOriginal = originalDailyPrice * durationDays;
+  const totalPromo = promoDailyPrice * durationDays;
+  const totalDiscount = totalOriginal - totalPromo;
 
   const handleConsultWhatsApp = () => {
     const serviceName = activeService === 'lepas_kunci' ? 'Lepas Kunci (Self-Drive)'
@@ -83,15 +85,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
       : 'Paket All-In (Sopir+BBM+Tol)';
 
     const text = `Halo Admin DCS Rent Car,
-Saya *${userName || 'Pelanggan'}* ingin tanya estimasi sewa mobil untuk rute berikut:
+Saya *${userName || 'Pelanggan'}* ingin konsultasi sewa mobil untuk rute berikut:
 
 📍 *Titik Jemput (Dari)*: ${currentOrigin}
 🏁 *Tujuan (Mau Ke)*: ${currentDestination}
 ⏳ *Durasi*: ${durationDays} Hari
 📋 *Layanan*: ${serviceName}
 🛣️ *Estimasi Jarak*: ~${estimatedKm} KM (${estimatedHours})
+💰 *Estimasi Promo*: Rp ${totalPromo.toLocaleString('id-ID')}
 
-Mohon info rekomendasi armada yang cocok dan rincian harganya ya admin. Terima kasih!`;
+Mohon info ketersediaan unit dan kelanjutan verifikasinya ya admin. Terima kasih!`;
 
     window.open(`https://wa.me/${COMPANY.whatsapp}?text=${encodeURIComponent(text)}`, '_blank');
   };
@@ -135,112 +138,123 @@ Mohon info rekomendasi armada yang cocok dan rincian harganya ya admin. Terima k
 
         <button
           onClick={handleSelectArmadaForRoute}
-          className="px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-600 text-xs font-bold shadow-sm active:scale-95 transition flex items-center gap-1"
+          className="px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-600 text-xs font-bold shadow-sm active:scale-95 transition flex items-center gap-1.5"
         >
           <Car className="w-3.5 h-3.5" />
-          <span>Armada</span>
+          <span>Lihat Armada</span>
         </button>
       </div>
 
-      {/* Promo Banner Card (Compact Luxury Indigo) */}
-      <div 
-        onClick={handleSelectArmadaForRoute}
-        className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0b0f19] via-[#111827] to-[#1e1b4b] p-4 text-white shadow-lg cursor-pointer active:scale-[0.99] transition group"
-      >
-        <div className="relative z-10 flex items-center justify-between">
-          <div className="w-2/3 space-y-1">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-amber-400 flex items-center gap-1">
-              <Flame className="w-3 h-3 fill-amber-400 text-amber-400" />
-              Promo Jabodetabek & Luar Kota
-            </span>
-            <h2 className="text-sm font-extrabold text-white leading-snug">
-              Hitung Biaya Rute <br />
-              <span className="text-blue-400">Dapatkan Diskon s/d 20%</span>
-            </h2>
-          </div>
-          <div className="w-1/3 flex justify-end">
-            <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition">
-              <ArrowRight className="w-4 h-4 stroke-[2.2]" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* CORE FEATURE: Trip & Route Calculator (Dari Mana & Mau Ke Mana) */}
+      {/* CORE FEATURE: Trip & Route Cost Calculator */}
       <div className="bg-white rounded-3xl p-5 app-card-shadow border border-zinc-100 space-y-4">
-        <div className="flex items-center justify-between border-b border-zinc-100 pb-2.5">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
-              <Route className="w-4 h-4 stroke-[2.2]" />
-            </div>
-            <div>
-              <h2 className="text-xs font-bold text-zinc-900">Kalkulator Rute & Biaya</h2>
-              <p className="text-[10px] text-zinc-400">Simulasi perjalanan dari mana ke mana</p>
-            </div>
+        {/* Header Title (Tanpa tulisan realtime) */}
+        <div className="flex items-center gap-2.5 border-b border-zinc-100 pb-3">
+          <div className="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+            <Route className="w-5 h-5 stroke-[2.2]" />
           </div>
-          <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-            Realtime
-          </span>
+          <div>
+            <h2 className="text-sm font-extrabold text-zinc-900">Kalkulator Rute & Biaya Sewa</h2>
+            <p className="text-[11px] text-zinc-400">Pilih atau ketik rute perjalanan Anda secara fleksibel</p>
+          </div>
         </div>
 
-        {/* Visual Map Route Stepper Card */}
-        <div className="relative bg-zinc-50 rounded-2xl p-3.5 border border-zinc-200/70 space-y-3">
+        {/* Visual Map Route Stepper Card with Custom Option */}
+        <div className="relative bg-zinc-50 rounded-2xl p-4 border border-zinc-200/70 space-y-4">
+          
           {/* Origin: Dari Mana */}
-          <div className="flex items-start gap-3">
-            <div className="flex flex-col items-center mt-1">
-              <div className="w-3.5 h-3.5 rounded-full bg-blue-600 ring-4 ring-blue-100"></div>
-              <div className="w-0.5 h-10 bg-dashed border-l border-zinc-300 my-1"></div>
-            </div>
-            <div className="flex-1">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-0.5">
-                Dari Mana (Titik Jemput):
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block"></span>
+                <span>Dari Mana (Titik Penjemputan):</span>
               </label>
+
+              <button
+                type="button"
+                onClick={() => setIsCustomOrigin(!isCustomOrigin)}
+                className="text-[10px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 underline"
+              >
+                <Edit3 className="w-2.5 h-2.5" />
+                <span>{isCustomOrigin ? 'Pilih dari List' : 'Ketik Alamat Sendiri'}</span>
+              </button>
+            </div>
+
+            {isCustomOrigin ? (
+              <input
+                type="text"
+                placeholder="Ketik alamat jemput (cth: Jl. Margonda No. 10 / Lobi Hotel...)"
+                value={customOriginText}
+                onChange={(e) => setCustomOriginText(e.target.value)}
+                autoFocus
+                className="w-full bg-white border border-blue-400 rounded-xl px-3 py-2 text-xs font-semibold text-zinc-800 placeholder-zinc-400 focus:outline-none shadow-sm"
+              />
+            ) : (
               <select
                 value={origin}
-                onChange={(e) => {
-                  setOrigin(e.target.value);
-                  setCustomOrigin('');
-                }}
-                className="w-full bg-white border border-zinc-200 rounded-xl px-2.5 py-2 text-xs font-semibold text-zinc-800 focus:outline-none focus:border-blue-600 transition"
+                onChange={(e) => setOrigin(e.target.value)}
+                className="w-full bg-white border border-zinc-200 rounded-xl px-3 py-2 text-xs font-semibold text-zinc-800 focus:outline-none focus:border-blue-600 transition"
               >
                 {POPULAR_ORIGINS.map((orig, i) => (
                   <option key={i} value={orig}>{orig}</option>
                 ))}
               </select>
+            )}
+          </div>
+
+          {/* Dotted divider */}
+          <div className="border-t border-dashed border-zinc-200 relative my-1">
+            <div className="absolute left-1.5 -top-1.5 w-3 h-3 bg-zinc-100 rounded-full flex items-center justify-center">
+              <span className="w-1 h-1 bg-zinc-400 rounded-full"></span>
             </div>
           </div>
 
           {/* Destination: Mau Ke Mana */}
-          <div className="flex items-start gap-3">
-            <div className="flex flex-col items-center mt-1">
-              <div className="w-3.5 h-3.5 rounded-full bg-rose-500 ring-4 ring-rose-100"></div>
-            </div>
-            <div className="flex-1">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-0.5">
-                Mau Ke Mana (Tujuan):
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
+                <span>Mau Ke Mana (Tujuan Perjalanan):</span>
               </label>
+
+              <button
+                type="button"
+                onClick={() => setIsCustomDest(!isCustomDest)}
+                className="text-[10px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 underline"
+              >
+                <Edit3 className="w-2.5 h-2.5" />
+                <span>{isCustomDest ? 'Pilih dari List' : 'Ketik Tujuan Sendiri'}</span>
+              </button>
+            </div>
+
+            {isCustomDest ? (
+              <input
+                type="text"
+                placeholder="Ketik tujuan (cth: Lembang Bandung / Pantai Carita / BSD...)"
+                value={customDestText}
+                onChange={(e) => setCustomDestText(e.target.value)}
+                autoFocus
+                className="w-full bg-white border border-rose-400 rounded-xl px-3 py-2 text-xs font-semibold text-zinc-800 placeholder-zinc-400 focus:outline-none shadow-sm"
+              />
+            ) : (
               <select
                 value={destination}
-                onChange={(e) => {
-                  setDestination(e.target.value);
-                  setCustomDestination('');
-                }}
-                className="w-full bg-white border border-zinc-200 rounded-xl px-2.5 py-2 text-xs font-semibold text-zinc-800 focus:outline-none focus:border-blue-600 transition"
+                onChange={(e) => setDestination(e.target.value)}
+                className="w-full bg-white border border-zinc-200 rounded-xl px-3 py-2 text-xs font-semibold text-zinc-800 focus:outline-none focus:border-blue-600 transition"
               >
                 {POPULAR_DESTINATIONS.map((dest, i) => (
                   <option key={i} value={dest}>{dest}</option>
                 ))}
               </select>
-            </div>
+            )}
           </div>
         </div>
 
-        {/* Route Stats Summary (Distance & Time in visual badges) */}
+        {/* Distance & Travel Time Badges */}
         <div className="grid grid-cols-2 gap-2 text-center">
           <div className="bg-zinc-50 rounded-2xl p-2.5 border border-zinc-100 flex items-center gap-2">
             <Navigation className="w-4 h-4 text-blue-600 shrink-0" />
             <div className="text-left">
-              <span className="text-[9px] text-zinc-400 block">Estimasi Jarak</span>
+              <span className="text-[9px] text-zinc-400 block font-medium">Estimasi Jarak</span>
               <span className="text-xs font-bold text-zinc-800">~{estimatedKm} KM</span>
             </div>
           </div>
@@ -248,68 +262,72 @@ Mohon info rekomendasi armada yang cocok dan rincian harganya ya admin. Terima k
           <div className="bg-zinc-50 rounded-2xl p-2.5 border border-zinc-100 flex items-center gap-2">
             <Clock className="w-4 h-4 text-emerald-600 shrink-0" />
             <div className="text-left">
-              <span className="text-[9px] text-zinc-400 block">Waktu Tempuh</span>
+              <span className="text-[9px] text-zinc-400 block font-medium">Waktu Tempuh</span>
               <span className="text-xs font-bold text-zinc-800">{estimatedHours}</span>
             </div>
           </div>
         </div>
 
-        {/* Service Type Switcher */}
+        {/* Layanan Switcher */}
         <div className="space-y-1.5 pt-1">
           <label className="text-xs font-bold text-zinc-700 block">
             Pilih Paket Layanan:
           </label>
           <div className="grid grid-cols-3 gap-1.5">
             <button
+              type="button"
               onClick={() => onServiceChange('lepas_kunci')}
-              className={`p-2 rounded-xl text-xs font-semibold border transition text-center ${
+              className={`p-2.5 rounded-xl text-xs font-semibold border transition text-center ${
                 activeService === 'lepas_kunci'
                   ? 'bg-blue-50 border-blue-600 text-blue-900 font-bold shadow-sm'
                   : 'bg-white border-zinc-200 text-zinc-500 hover:text-zinc-800'
               }`}
             >
-              <div className="text-xs">Lepas Kunci</div>
+              <div className="text-xs font-bold">Lepas Kunci</div>
               <div className="text-[9px] text-zinc-400 mt-0.5">24 Jam</div>
             </button>
 
             <button
+              type="button"
               onClick={() => onServiceChange('dengan_sopir')}
-              className={`p-2 rounded-xl text-xs font-semibold border transition text-center ${
+              className={`p-2.5 rounded-xl text-xs font-semibold border transition text-center ${
                 activeService === 'dengan_sopir'
                   ? 'bg-blue-50 border-blue-600 text-blue-900 font-bold shadow-sm'
                   : 'bg-white border-zinc-200 text-zinc-500 hover:text-zinc-800'
               }`}
             >
-              <div className="text-xs">Dengan Sopir</div>
+              <div className="text-xs font-bold">Dengan Sopir</div>
               <div className="text-[9px] text-zinc-400 mt-0.5">Driver Standby</div>
             </button>
 
             <button
+              type="button"
               onClick={() => onServiceChange('all_in')}
-              className={`p-2 rounded-xl text-xs font-semibold border transition text-center ${
+              className={`p-2.5 rounded-xl text-xs font-semibold border transition text-center ${
                 activeService === 'all_in'
                   ? 'bg-amber-50 border-amber-500 text-amber-900 font-bold shadow-sm'
                   : 'bg-white border-zinc-200 text-zinc-500 hover:text-zinc-800'
               }`}
             >
-              <div className="text-xs">Paket All-In</div>
+              <div className="text-xs font-bold">Paket All-In</div>
               <div className="text-[9px] text-zinc-400 mt-0.5">+BBM+Tol</div>
             </button>
           </div>
         </div>
 
-        {/* Duration Days */}
+        {/* Durasi Sewa */}
         <div className="flex items-center justify-between p-3 bg-zinc-50 rounded-2xl border border-zinc-200/80">
           <div>
             <span className="text-xs font-bold text-zinc-800 block">Durasi Pemakaian:</span>
             <span className="text-[10px] text-zinc-400">
-              {isLuarKota ? 'Rekomendasi luar kota: 1-2 hari' : 'Hitungan harian per 24 jam'}
+              {isLuarKota ? 'Rekomendasi luar kota: 1-2 hari' : 'Hitungan per 24 jam'}
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            {[1, 2, 3].map((d) => (
+          <div className="flex items-center gap-1.5">
+            {[1, 2, 3, 5].map((d) => (
               <button
                 key={d}
+                type="button"
                 onClick={() => setDurationDays(d)}
                 className={`w-8 h-8 rounded-xl text-xs font-bold transition ${
                   durationDays === d
@@ -323,39 +341,45 @@ Mohon info rekomendasi armada yang cocok dan rincian harganya ya admin. Terima k
           </div>
         </div>
 
-        {/* Calculation Result Breakdown Card */}
-        <div className="p-4 rounded-2xl bg-gradient-to-br from-zinc-50 to-blue-50/40 border border-blue-100 space-y-2">
+        {/* Calculation Result Breakdown Card (DENGAN HARGA CORET & DISKON) */}
+        <div className="p-4 rounded-2xl bg-gradient-to-br from-zinc-50 to-blue-50/50 border border-blue-100 space-y-2">
           <div className="flex items-center justify-between text-xs text-zinc-600">
-            <span>Sewa Harian ({durationDays} Hari):</span>
+            <span>Rute & Durasi:</span>
             <span className="font-semibold text-zinc-900">
-              Mulai Rp {(baseDailyPrice * durationDays).toLocaleString('id-ID')}
+              {durationDays} Hari ({isLuarKota ? 'Luar Kota' : 'Dalam Kota'})
             </span>
           </div>
 
           <div className="flex items-center justify-between text-xs text-zinc-600">
-            <span>Zonasi Perjalanan:</span>
-            <span className="font-semibold text-blue-600">
-              {isLuarKota ? 'Trip Luar Kota' : 'Area Jabodetabek'}
+            <span>Diskon Promo:</span>
+            <span className="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 text-[10px]">
+              Hemat Rp {totalDiscount.toLocaleString('id-ID')}
             </span>
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-zinc-200">
+          <div className="flex items-baseline justify-between pt-2 border-t border-zinc-200">
             <div>
-              <span className="text-xs font-bold text-zinc-800 block">Estimasi Tarif:</span>
-              <span className="text-[10px] text-emerald-600 font-semibold">Tersedia Banyak Pilihan Mobil</span>
+              <span className="text-xs font-bold text-zinc-800 block">Estimasi Biaya:</span>
+              <span className="text-[10px] text-zinc-400">Mulai harga promo</span>
             </div>
+
             <div className="text-right">
-              <span className="text-base font-black text-blue-600">
-                Rp {totalEstimate.toLocaleString('id-ID')}
+              {/* HARGA CORET */}
+              <span className="line-through text-xs text-zinc-400 font-semibold block">
+                Rp {totalOriginal.toLocaleString('id-ID')}
               </span>
-              <span className="text-[10px] text-zinc-400 font-normal block">/estimasi paket</span>
+              {/* HARGA DISKON PROMO */}
+              <span className="text-lg font-black text-blue-600">
+                Rp {totalPromo.toLocaleString('id-ID')}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Action Buttons: 1. See Fleet for this Route, 2. Chat CS WA */}
+        {/* Action Buttons: 1. See Fleet, 2. Chat WA */}
         <div className="space-y-2 pt-1">
           <button
+            type="button"
             onClick={handleSelectArmadaForRoute}
             className="w-full py-3.5 px-4 rounded-2xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition"
           >
@@ -365,16 +389,17 @@ Mohon info rekomendasi armada yang cocok dan rincian harganya ya admin. Terima k
           </button>
 
           <button
+            type="button"
             onClick={handleConsultWhatsApp}
-            className="w-full py-2.5 px-3 rounded-2xl bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 active:scale-95 font-semibold text-xs flex items-center justify-center gap-2 transition"
+            className="w-full py-2.5 px-3 rounded-2xl bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 text-emerald-800 active:scale-95 font-bold text-xs flex items-center justify-center gap-2 transition"
           >
-            <MessageSquare className="w-4 h-4 text-emerald-600" />
+            <WhatsAppIcon className="w-4 h-4 text-emerald-600" />
             <span>Konsultasi Rute Ini via WhatsApp CS</span>
           </button>
         </div>
       </div>
 
-      {/* Trust & Guarantees */}
+      {/* Trust & Guarantee Box */}
       <div className="p-4 bg-white rounded-3xl app-card-shadow border border-zinc-100 flex items-center justify-around text-center text-[10px] text-zinc-500">
         <div className="flex flex-col items-center gap-1">
           <ShieldCheck className="w-4 h-4 text-blue-600" />
@@ -383,7 +408,7 @@ Mohon info rekomendasi armada yang cocok dan rincian harganya ya admin. Terima k
         <div className="w-[1px] h-6 bg-zinc-200"></div>
         <div className="flex flex-col items-center gap-1">
           <Clock className="w-4 h-4 text-emerald-600" />
-          <span className="font-medium">Standby Antar 24 Jam</span>
+          <span className="font-medium">Standby 24 Jam</span>
         </div>
         <div className="w-[1px] h-6 bg-zinc-200"></div>
         <div className="flex flex-col items-center gap-1">
