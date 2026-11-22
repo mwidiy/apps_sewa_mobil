@@ -1,0 +1,18 @@
+{
+  "name": "DCS Rent Car Mobile",
+  "short_name": "DCS Rent",
+  "description": "Aplikasi Sewa Mobil Harian Jabodetabek Lepas Kunci & Driver",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0284c7",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logo.jpeg",
+      "sizes": "192x192 512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
