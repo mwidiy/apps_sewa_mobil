@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, ShieldCheck, User, Sparkles } from 'lucide-react';
+import { ArrowRight, User } from 'lucide-react';
 
 interface IntroScreenProps {
   onSaveName: (name: string) => void;
@@ -28,51 +28,43 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({
       <div className="w-full max-w-md h-[100dvh] bg-white flex flex-col justify-between p-6 relative overflow-hidden shadow-2xl">
         {/* Ambient Top Glow */}
         <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         {/* Top Header */}
-        <div className="pt-4 flex items-center justify-between relative z-10">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">
-              DCS Rent Car Mobile
-            </span>
-          </div>
+        <div className="pt-3 flex items-center justify-end relative z-10">
           <button
             onClick={onSkip}
-            className="text-xs font-semibold text-zinc-400 hover:text-zinc-600 px-3 py-1 rounded-full bg-zinc-100 transition active:scale-95"
+            className="text-xs font-semibold text-zinc-400 hover:text-zinc-600 px-3.5 py-1.5 rounded-full bg-zinc-100/80 transition active:scale-95"
           >
             Lewati
           </button>
         </div>
 
         {/* Main Center Content */}
-        <div className="space-y-6 my-auto py-6 relative z-10 text-center">
-          {/* Large Logo Showcase */}
+        <div className="space-y-6 my-auto py-4 relative z-10 text-center">
+          {/* Animated Logo Showcase with Ambient Glow */}
           <div className="relative inline-block mx-auto">
-            <div className="w-24 h-24 rounded-3xl overflow-hidden mx-auto shadow-2xl ring-4 ring-blue-500/20 bg-white p-1">
+            {/* Pulsing ambient halo behind logo */}
+            <div className="absolute -inset-3 rounded-full bg-blue-500/20 blur-xl animate-pulse-halo pointer-events-none"></div>
+
+            {/* Gentle floating logo card */}
+            <div className="relative z-10 w-24 h-24 rounded-3xl overflow-hidden mx-auto shadow-2xl ring-4 ring-blue-500/20 bg-white p-1 animate-float-logo">
               <img
                 src="/logo.jpeg"
-                alt="Sewa Mobil DCS"
+                alt="Rental Mobil"
                 className="w-full h-full object-cover rounded-[20px]"
               />
-            </div>
-            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center">
-              <Sparkles className="w-3 h-3 text-white fill-white" />
             </div>
           </div>
 
           {/* Titles */}
           <div className="space-y-2">
-            <span className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-black tracking-wide border border-blue-200/80">
-              RENTAL MOBIL JABODETABEK
+            <span className="inline-block px-3.5 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-black tracking-wider uppercase border border-blue-200/80">
+              Rental Mobil Jabodetabek
             </span>
-            <h1 className="text-2xl font-black text-zinc-900 tracking-tight leading-tight">
-              Sewa Mobil DCS
+            <h1 className="text-3xl font-black text-zinc-900 tracking-tight leading-tight">
+              Sewa Mobil Harian
             </h1>
-            <p className="text-xs text-zinc-500 leading-relaxed max-w-[280px] mx-auto">
-              Sewa mobil harian lepas kunci, dengan sopir, & paket all-in dengan armada gress terawat.
-            </p>
           </div>
 
           {/* Form Input Card */}
@@ -98,7 +90,7 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({
         </div>
 
         {/* Bottom Action Section */}
-        <div className="pb-6 space-y-3 relative z-10 max-w-sm mx-auto w-full">
+        <div className="pb-6 relative z-10 max-w-sm mx-auto w-full">
           <button
             onClick={handleSubmit}
             className="w-full py-4 px-6 rounded-2xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-xl shadow-blue-600/35 transition"
@@ -106,11 +98,6 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({
             <span>Mulai Jelajah & Hitung Rute</span>
             <ArrowRight className="w-4 h-4 stroke-[2.5]" />
           </button>
-
-          <div className="flex items-center justify-center gap-1.5 text-[10px] text-zinc-400">
-            <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
-            <span>Tanpa Login Akun • Langsung Siap Pakai di HP</span>
-          </div>
         </div>
       </div>
     </div>

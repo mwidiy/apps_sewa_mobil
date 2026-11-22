@@ -33,6 +33,35 @@
   transform: scale(0.98);
 }
 
+/* Custom logo floating & aura animations */
+@keyframes floatLogo {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+@keyframes pulseHalo {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.75;
+  }
+}
+
+.animate-float-logo {
+  animation: floatLogo 3.6s ease-in-out infinite;
+}
+
+.animate-pulse-halo {
+  animation: pulseHalo 3.6s ease-in-out infinite;
+}
+
 /* Hide scrollbars for horizontal chip scrolling */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
