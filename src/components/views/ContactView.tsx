@@ -17,17 +17,24 @@ interface ContactViewProps {
 
 export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
   return (
-    <div className="pb-32 pt-4 px-4 max-w-md mx-auto space-y-4 animate-in fade-in duration-200">
-      {/* Header */}
-      <div className="relative flex items-center justify-center pt-1 mb-2">
+    <div className="pb-32 max-w-md mx-auto animate-view-transition">
+      {/* Sticky Top Header Nav Bar with Safe Headroom */}
+      <header className="sticky top-0 z-40 bg-[#f1f3f7]/90 backdrop-blur-md pt-8 pb-3 px-4 border-b border-zinc-200/50 shadow-xs flex items-center justify-between">
         <button
           onClick={onBack}
-          className="absolute left-0 w-9 h-9 rounded-full bg-white border border-zinc-200/80 shadow-sm flex items-center justify-center text-zinc-700 active:scale-95 transition"
+          className="w-10 h-10 rounded-full bg-white border border-zinc-200/80 shadow-sm flex items-center justify-center text-zinc-700 active:scale-95 transition"
+          title="Kembali"
         >
           <ArrowLeft className="w-4 h-4 stroke-[2]" />
         </button>
         <h1 className="text-sm font-bold text-zinc-900 tracking-tight">Kontak & Lokasi Pool</h1>
-      </div>
+        <div className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+          24 Jam
+        </div>
+      </header>
+
+      {/* Main Content Area */}
+      <div className="px-4 pt-3 space-y-4">
 
       {/* Pool Location Card */}
       <div className="bg-white rounded-3xl p-5 app-card-shadow border border-zinc-100 space-y-3">
@@ -117,6 +124,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
         >
           <span>Hubungi Bantuan Darurat</span>
         </a>
+      </div>
       </div>
     </div>
   );

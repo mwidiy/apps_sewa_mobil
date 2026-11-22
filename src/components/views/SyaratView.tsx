@@ -42,17 +42,24 @@ export const SyaratView: React.FC<SyaratViewProps> = ({ onBack }) => {
   };
 
   return (
-    <div className="pb-32 pt-4 px-4 max-w-md mx-auto space-y-4 animate-in fade-in duration-200">
-      {/* Header */}
-      <div className="relative flex items-center justify-center pt-1 mb-2">
+    <div className="pb-32 max-w-md mx-auto animate-view-transition">
+      {/* Sticky Top Header Nav Bar with Safe Headroom */}
+      <header className="sticky top-0 z-40 bg-[#f1f3f7]/90 backdrop-blur-md pt-8 pb-3 px-4 border-b border-zinc-200/50 shadow-xs flex items-center justify-between">
         <button
           onClick={onBack}
-          className="absolute left-0 w-9 h-9 rounded-full bg-white border border-zinc-200/80 shadow-sm flex items-center justify-center text-zinc-700 active:scale-95 transition"
+          className="w-10 h-10 rounded-full bg-white border border-zinc-200/80 shadow-sm flex items-center justify-center text-zinc-700 active:scale-95 transition"
+          title="Kembali"
         >
           <ArrowLeft className="w-4 h-4 stroke-[2]" />
         </button>
         <h1 className="text-sm font-bold text-zinc-900 tracking-tight">Syarat & Dokumen</h1>
-      </div>
+        <div className="w-10 h-10 flex items-center justify-center">
+          <ShieldCheck className="w-5 h-5 text-blue-600" />
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="px-4 pt-3 space-y-4">
 
       {/* Service Selector */}
       <div className="flex items-center gap-1.5 p-1 bg-zinc-200/60 rounded-full text-xs font-semibold">
@@ -135,6 +142,7 @@ export const SyaratView: React.FC<SyaratViewProps> = ({ onBack }) => {
         <WhatsAppIcon className="w-4 h-4 text-white" />
         <span>Kirim Kelayakan Berkas ke WhatsApp CS</span>
       </button>
+      </div>
     </div>
   );
 };

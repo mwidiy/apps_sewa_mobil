@@ -33,17 +33,25 @@ export const RentDetailsView: React.FC<RentDetailsViewProps> = ({
   const pricing = getCarPrice(car, selectedService);
 
   return (
-    <div className="min-h-screen bg-[#f1f3f7] pb-32 pt-4 px-4 max-w-md mx-auto text-zinc-900 animate-in fade-in duration-200">
-      {/* Top Header with Back Button */}
-      <div className="relative flex items-center justify-center pt-1 mb-3">
+    <div className="min-h-screen bg-[#f1f3f7] pb-32 max-w-md mx-auto text-zinc-900 animate-view-transition">
+      {/* Sticky Top Header Nav Bar with Safe Headroom */}
+      <header className="sticky top-0 z-40 bg-[#f1f3f7]/90 backdrop-blur-md pt-8 pb-3 px-4 border-b border-zinc-200/50 shadow-xs flex items-center justify-between">
         <button
           onClick={onBack}
-          className="absolute left-0 w-9 h-9 rounded-full bg-white border border-zinc-200/80 shadow-sm flex items-center justify-center text-zinc-700 active:scale-95 transition"
+          className="w-10 h-10 rounded-full bg-white border border-zinc-200/80 shadow-sm flex items-center justify-center text-zinc-700 active:scale-95 transition"
+          title="Kembali"
         >
           <ArrowLeft className="w-4 h-4 stroke-[2]" />
         </button>
         <h1 className="text-sm font-bold text-zinc-900 tracking-tight">Rent Details</h1>
-      </div>
+        <div className="flex items-center gap-1 text-xs font-bold text-amber-500 bg-amber-50 border border-amber-200/60 px-2 py-0.5 rounded-full">
+          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+          <span>4.9</span>
+        </div>
+      </header>
+
+      {/* Main Details Body */}
+      <div className="px-4 pt-3 space-y-4">
 
       {/* Hero Car Showcase with Studio Radial Background */}
       <div className="relative py-3 flex flex-col items-center justify-center">
@@ -195,6 +203,7 @@ export const RentDetailsView: React.FC<RentDetailsViewProps> = ({
         >
           <span>Rent Now</span>
         </button>
+      </div>
       </div>
     </div>
   );

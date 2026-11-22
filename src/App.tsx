@@ -92,18 +92,20 @@ export function App() {
       {/* Mobile viewport container */}
       <div className="w-full max-w-md bg-[#f1f3f7] min-h-screen flex flex-col relative shadow-2xl border-x border-zinc-200/60 overflow-x-hidden">
         
-        {/* Main Content Router */}
+        {/* Main Content Router with Smooth Tab Transitions */}
         <main className="flex-1">
           {/* If a car is selected, show Screen 3: Rent Details */}
           {selectedCar ? (
-            <RentDetailsView
-              car={selectedCar}
-              defaultService={activeService}
-              onBack={handleBackFromDetails}
-              onRentNow={handleRentNow}
-            />
+            <div key={selectedCar.id} className="animate-view-transition">
+              <RentDetailsView
+                car={selectedCar}
+                defaultService={activeService}
+                onBack={handleBackFromDetails}
+                onRentNow={handleRentNow}
+              />
+            </div>
           ) : (
-            <>
+            <div key={activeTab} className="animate-view-transition">
               {activeTab === 'home' && (
                 <HomeView
                   userName={userName}
@@ -131,7 +133,7 @@ export function App() {
               {activeTab === 'contact' && (
                 <ContactView onBack={() => setActiveTab('home')} />
               )}
-            </>
+            </div>
           )}
         </main>
 

@@ -6,7 +6,8 @@ import {
   Route, 
   ShieldCheck, 
   Car,
-  ChevronDown
+  ChevronDown,
+  Bell
 } from 'lucide-react';
 import { POPULAR_ORIGINS, POPULAR_DESTINATIONS } from '../../data/routes';
 import { COMPANY } from '../../data/company';
@@ -95,9 +96,9 @@ Mohon info ketersediaan unit dan kelanjutan verifikasinya ya admin. Terima kasih
   };
 
   return (
-    <div className="pb-28 pt-4 px-4 max-w-md mx-auto space-y-4 animate-in fade-in duration-200">
-      {/* Top Header: Welcome & Personalized Name */}
-      <div className="flex items-center justify-between pt-1">
+    <div className="pb-28 max-w-md mx-auto animate-view-transition">
+      {/* Sticky Top Header Nav Bar with Safe Headroom */}
+      <header className="sticky top-0 z-40 bg-[#f1f3f7]/90 backdrop-blur-md pt-8 pb-3 px-4 border-b border-zinc-200/50 shadow-xs flex items-center justify-between">
         <div 
           onClick={onOpenNameEdit}
           className="flex items-center gap-3 cursor-pointer group"
@@ -106,31 +107,46 @@ Mohon info ketersediaan unit dan kelanjutan verifikasinya ya admin. Terima kasih
           <div className="relative">
             <img
               src="/logo.jpeg"
-              alt="Sewa Mobil DCS"
-              className="w-11 h-11 rounded-full object-cover ring-2 ring-white shadow-sm group-hover:scale-105 transition"
+              alt="Sewa Mobil"
+              className="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm group-hover:scale-105 transition"
             />
-            <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"></div>
+            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></div>
           </div>
           <div>
-            <div className="text-xs text-zinc-400 font-medium flex items-center gap-1">
+            <div className="text-[11px] text-zinc-400 font-medium flex items-center gap-1 leading-none">
               <span>Welcome</span>
               <span>👋</span>
             </div>
-            <h1 className="text-base font-extrabold text-zinc-900 tracking-tight group-hover:text-blue-600 transition flex items-center gap-1.5">
-              <span>{userName || 'Sewa Mobil DCS'}</span>
-              <span className="text-[10px] text-zinc-400 font-normal underline">ubah</span>
+            <h1 className="text-sm font-extrabold text-zinc-900 tracking-tight group-hover:text-blue-600 transition flex items-center gap-1.5 mt-0.5">
+              <span>{userName || 'Sewa Mobil'}</span>
+              <span className="text-[9px] text-zinc-400 font-medium bg-zinc-200/60 px-1.5 py-0.2 rounded-full">ubah</span>
             </h1>
           </div>
         </div>
 
-        <button
-          onClick={handleSelectArmadaForRoute}
-          className="px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-600 text-xs font-bold shadow-sm active:scale-95 transition flex items-center gap-1.5"
-        >
-          <Car className="w-3.5 h-3.5" />
-          <span>Lihat Armada</span>
-        </button>
-      </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleSelectArmadaForRoute}
+            className="px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-600 text-xs font-bold shadow-sm active:scale-95 transition flex items-center gap-1.5"
+            title="Lihat Semua Unit Mobil"
+          >
+            <Car className="w-3.5 h-3.5" />
+            <span>Armada</span>
+          </button>
+
+          <button
+            onClick={() => alert("🎉 Promo Spesial Jabodetabek:\nNikmati diskon harga sewa harian hingga 22% untuk semua armada ready!")}
+            className="w-9 h-9 rounded-full bg-white border border-zinc-200/80 shadow-sm flex items-center justify-center text-zinc-700 active:scale-95 transition relative"
+            title="Pemberitahuan Promo"
+          >
+            <Bell className="w-4 h-4 stroke-[2]" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+          </button>
+        </div>
+      </header>
+
+      {/* Main Content Area */}
+      <div className="px-4 pt-3 space-y-4">
 
       {/* CORE FEATURE: Trip & Route Cost Calculator */}
       <div className="bg-white rounded-3xl p-5 app-card-shadow border border-zinc-100 space-y-4">
@@ -361,6 +377,7 @@ Mohon info ketersediaan unit dan kelanjutan verifikasinya ya admin. Terima kasih
           <Navigation className="w-4 h-4 text-amber-500" />
           <span className="font-medium">Pool Utama Cinere</span>
         </div>
+      </div>
       </div>
     </div>
   );
