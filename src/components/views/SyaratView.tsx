@@ -142,6 +142,18 @@ export const SyaratView: React.FC<SyaratViewProps> = ({ onBack }) => {
         <WhatsAppIcon className="w-4 h-4 text-white" />
         <span>Kirim Kelayakan Berkas ke WhatsApp CS</span>
       </button>
+
+      {/* Privacy Policy Link for Google Play Compliance */}
+      <div className="pt-2 text-center pb-1">
+        <a
+          href="https://mwidiy.github.io/sewa-mobil-privacy-policy/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[11px] text-zinc-400 hover:text-blue-600 underline font-medium transition"
+        >
+          Kebijakan Privasi Aplikasi (Privacy Policy)
+        </a>
+      </div>
       </div>
     </div>
   );
