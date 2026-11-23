@@ -1,6 +1,6 @@
 {
-  "name": "DCS Rent Car Mobile",
-  "short_name": "DCS Rent",
+  "name": "Sewa Mobil",
+  "short_name": "Sewa Mobil",
   "description": "Aplikasi Sewa Mobil Harian Jabodetabek Lepas Kunci & Driver",
   "start_url": "/",
   "display": "standalone",
